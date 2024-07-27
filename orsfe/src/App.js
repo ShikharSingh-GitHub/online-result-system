@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import './App.css';
 import UserForm from './components/UserForm';
 import UserList from './components/UserList';
 
@@ -31,12 +32,10 @@ const App = () => {
     <Router>
       <div className="container">
         <h1>User Management</h1>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/adduser">Add User</Link></li>
-            <li><Link to="/UserList">UserList</Link></li>
-          </ul>
+        <nav className="navbar">
+          <Link to="/">Home</Link>
+          <Link to="/adduser">Add User</Link>
+          <Link to="/UserList">User List</Link>
         </nav>
         <Routes>
           <Route path="/" element={<h2>Welcome to the User Management System</h2>} />

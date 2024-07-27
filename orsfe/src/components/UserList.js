@@ -4,7 +4,7 @@ const UserList = ({ users }) => {
   return (
     <div>
       <h2 align="center">User List</h2>
-      <table className="table">
+      <table className="table" align="center">
         <thead>
           <tr>
             <th>First Name</th>

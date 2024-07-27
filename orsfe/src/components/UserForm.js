@@ -11,7 +11,7 @@ const UserForm = ({ fetchUsers }) => {
     role: ''
   });
   const [message, setMessage] = useState('');
-  console.log('name by handleChange = ' , formData.firstName);
+  //console.log('name by handleChange = ', formData.firstName);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,9 +19,11 @@ const UserForm = ({ fetchUsers }) => {
       ...formData,
       [name]: value
     });
+    console.log(name,' => ',value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission
     fetch('http://localhost:5000/api/user/adduser', {
       method: 'POST',
       headers: {
@@ -37,7 +39,7 @@ const UserForm = ({ fetchUsers }) => {
       })
       .then((data) => {
         setFormData({
-          firstName: '',
+          firstName: 'abc',
           lastName: '',
           loginId: '',
           password: '',
@@ -57,49 +59,51 @@ const UserForm = ({ fetchUsers }) => {
     <div align="center">
       <h2>Add User</h2>
       {message && <p>{message}</p>}
-      <table>
-        <tbody>
-          <tr>
-            <td><label>First Name</label></td>
-            <td><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td><label>Last Name</label></td>
-            <td><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td><label>Login ID</label></td>
-            <td><input type="text" name="loginId" value={formData.loginId} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td><label>Password</label></td>
-            <td><input type="password" name="password" value={formData.password} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td><label>Date of Birth</label></td>
-            <td><input type="date" name="dob" value={formData.dob} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td><label>Gender</label></td>
-            <td>
-              <select name="gender" value={formData.gender} onChange={handleChange}>
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td><label>Role</label></td>
-            <td><input type="text" name="role" value={formData.role} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td colSpan="2" style={{ textAlign: 'center' }}>
-              <button type="button" onClick={handleSubmit}>Add User</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <form onSubmit={handleSubmit}>
+        <table>
+          <tbody>
+            <tr>
+              <td><label>First Name</label></td>
+              <td><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required /></td>
+            </tr>
+            <tr>
+              <td><label>Last Name</label></td>
+              <td><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required /></td>
+            </tr>
+            <tr>
+              <td><label>Login ID</label></td>
+              <td><input type="text" name="loginId" value={formData.loginId} onChange={handleChange} required /></td>
+            </tr>
+            <tr>
+              <td><label>Password</label></td>
+              <td><input type="password" name="password" value={formData.password} onChange={handleChange} required /></td>
+            </tr>
+            <tr>
+              <td><label>Date of Birth</label></td>
+              <td><input type="date" name="dob" value={formData.dob} onChange={handleChange} required /></td>
+            </tr>
+            <tr>
+              <td><label>Gender</label></td>
+              <td>
+                <select name="gender" value={formData.gender} onChange={handleChange} required>
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><label>Role</label></td>
+              <td><input type="text" name="role" value={formData.role} onChange={handleChange} required /></td>
+            </tr>
+            <tr>
+              <td colSpan="2" style={{ textAlign: 'center' }}>
+                <button type="submit">Add User</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
     </div>
   );
 };
