@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 const UserForm = ({ fetchUsers }) => {
@@ -11,7 +12,6 @@ const UserForm = ({ fetchUsers }) => {
     role: ''
   });
   const [message, setMessage] = useState('');
-  //console.log('name by handleChange = ', formData.firstName);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,7 +19,7 @@ const UserForm = ({ fetchUsers }) => {
       ...formData,
       [name]: value
     });
-    console.log(name,' => ',value);
+    console.log(name, ' => ', value);
   };
 
   const handleSubmit = (e) => {
@@ -39,7 +39,7 @@ const UserForm = ({ fetchUsers }) => {
       })
       .then((data) => {
         setFormData({
-          firstName: 'abc',
+          firstName: '',
           lastName: '',
           loginId: '',
           password: '',
@@ -56,53 +56,93 @@ const UserForm = ({ fetchUsers }) => {
   };
 
   return (
-    <div align="center">
-      <h2>Add User</h2>
-      {message && <p>{message}</p>}
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Add User</h2>
+      {message && <div className="alert alert-success">{message}</div>}
       <form onSubmit={handleSubmit}>
-        <table>
-          <tbody>
-            <tr>
-              <td><label>First Name</label></td>
-              <td><input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required /></td>
-            </tr>
-            <tr>
-              <td><label>Last Name</label></td>
-              <td><input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required /></td>
-            </tr>
-            <tr>
-              <td><label>Login ID</label></td>
-              <td><input type="text" name="loginId" value={formData.loginId} onChange={handleChange} required /></td>
-            </tr>
-            <tr>
-              <td><label>Password</label></td>
-              <td><input type="password" name="password" value={formData.password} onChange={handleChange} required /></td>
-            </tr>
-            <tr>
-              <td><label>Date of Birth</label></td>
-              <td><input type="date" name="dob" value={formData.dob} onChange={handleChange} required /></td>
-            </tr>
-            <tr>
-              <td><label>Gender</label></td>
-              <td>
-                <select name="gender" value={formData.gender} onChange={handleChange} required>
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><label>Role</label></td>
-              <td><input type="text" name="role" value={formData.role} onChange={handleChange} required /></td>
-            </tr>
-            <tr>
-              <td colSpan="2" style={{ textAlign: 'center' }}>
-                <button type="submit">Add User</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="form-group">
+          <label>First Name</label>
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Login ID</label>
+          <input
+            type="text"
+            name="loginId"
+            value={formData.loginId}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Date of Birth</label>
+          <input
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Gender</label>
+          <select
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            className="form-control"
+            required
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Role</label>
+          <input
+            type="text"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="text-center">
+          <button type="submit" className="btn btn-primary">Add User</button>
+        </div>
       </form>
     </div>
   );
