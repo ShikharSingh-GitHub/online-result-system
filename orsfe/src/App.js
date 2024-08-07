@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import LoginForm from './components/LoginForm';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import UserForm from './components/UserForm';
 import UserList from './components/UserList';
+import LoginForm from './components/LoginForm';
+import MarksheetForm from './components/MarksheetForm';
+import MarksheetList from './components/MarksheetList';
+import MeritMarksheetList from './components/MeritMarksheetList';
+import SignUp from './components/SignUp';
 
 const App = () => {
-  const [users, setUsers] = useState([]);
-  const [isAuth, setAuth] = useState(false);
-
-  const fetchUsers = () => {
-    fetch('http://localhost:5000/api/user/searchuser', { credentials: 'include' })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Network response was not ok.');
-      })
-      .then(data => {
-        setUsers(data);
-      })
-      .catch(error => {
-        console.error('Error fetching users:', error);
-      });
-  };
+  const [user, setUser] = useState(null); // Store user details
 
   const handleLogout = () => {
     fetch('http://localhost:5000/api/user/logout', {
@@ -32,7 +19,7 @@ const App = () => {
       .then(response => {
         if (response.ok) {
           localStorage.removeItem('user');
-          setAuth(false);
+          setUser(null);
         } else {
           throw new Error('Logout failed');
         }
@@ -43,12 +30,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setAuth(true);
-      fetchUsers(); // Fetch users on initial render if authenticated
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
     } else {
-      setAuth(false);
+      setUser(null);
     }
   }, []);
 
@@ -62,38 +48,72 @@ const App = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-              {isAuth ? (
+              {user ? (
                 <>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/adduser">Add User</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/UserList">User List</Link>
-                  </li>
+                  {user.role === 'admin' ? (
+                    <>
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/adduser">Add User</Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/UserList">User List</Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/addMarksheet">Add Marksheet</Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/MarksheetList">Marksheet List</Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/MeritMarksheetList">Merit Marksheet List</Link>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/MarksheetList">Marksheet List</Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/MeritMarksheetList">Merit Marksheet List</Link>
+                      </li>
+                    </>
+                  )}
                   <li className="nav-item">
                     <button className="nav-link btn" onClick={handleLogout}>Logout</button>
                   </li>
                 </>
               ) : (
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">Login</Link>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">Login</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/signUp">Sign Up</Link>
+                  </li>
+                </>
               )}
             </ul>
           </div>
         </nav>
         <Routes>
           <Route path="/" element={<h2 align="center">Welcome to Online Result System</h2>} />
-          {isAuth ? (
+          {user ? (
             <>
-              <Route path="/adduser" element={<UserForm fetchUsers={fetchUsers} />} />
-              <Route path="/UserList" element={<UserList users={users} fetchUsers={fetchUsers} />} />
-              <Route path="/edituser/:id" element={<UserForm fetchUsers={fetchUsers} />} />
+              <Route path="/adduser" element={user.role === 'admin' ? <UserForm /> : <Navigate to="/" />} />
+              <Route path="/UserList" element={user.role === 'admin' ? <UserList /> : <Navigate to="/" />} />
+              <Route path="/edituser/:id" element={user.role === 'admin' ? <UserForm /> : <Navigate to="/" />} />
+              <Route path="/addMarksheet" element={user.role === 'admin' ? <MarksheetForm /> : <Navigate to="/" />} />
+              <Route path="/MarksheetList" element={<MarksheetList />} />
+              <Route path="/editmarksheet/:id" element={user.role === 'admin' ? <MarksheetForm /> : <Navigate to="/" />} />
+              <Route path="/MeritMarksheetList" element={<MeritMarksheetList />} />
             </>
           ) : (
-            <Route path="/login" element={<LoginForm setAuth={setAuth} />} />
+            <>
+              <Route path="/login" element={<LoginForm setAuth={(user) => setUser(user)} />} />
+              <Route path="/signUp" element={<SignUp />} />
+            </>
           )}
-          <Route path="*" element={<Navigate to={isAuth ? "/" : "/login"} />} />
+          <Route path="*" element={<Navigate to={user ? "/" : "/login"} />} />
         </Routes>
       </div>
     </Router>

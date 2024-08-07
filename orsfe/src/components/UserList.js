@@ -1,14 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
+const UserList = () => {
+  const [users, setUsers] = useState([]);
 
-const UserList = ({ users, fetchUsers }) => {
+  const fetchUsers = () => {
+    fetch('http://localhost:5000/api/user/searchuser', { credentials: 'include' })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(data => {
+        setUsers(data);
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error);
+      });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const deleteUser = (userId) => {
     fetch(`http://localhost:5000/api/user/deleteuser/${userId}`, {
       method: 'POST',
+      credentials: 'include', // Include credentials for session management
     })
       .then(response => {
         if (response.ok) {
           fetchUsers();
+        } else if (response.status === 401) {
+          throw new Error('Unauthorized');
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -19,10 +44,10 @@ const UserList = ({ users, fetchUsers }) => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">User List</h2>
-      <table className="table table-bordered table-hover">
-        <thead className="thead-dark">
+    <div>
+      <h2 align="center">User List</h2>
+      <table border="1px" width="100%" align="center" className="table">
+        <thead align="center">
           <tr>
             <th>First Name</th>
             <th>Last Name</th>
@@ -33,7 +58,7 @@ const UserList = ({ users, fetchUsers }) => {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody align="center">
           {users.map(user => (
             <tr key={user._id}>
               <td>{user.firstName}</td>
@@ -43,7 +68,8 @@ const UserList = ({ users, fetchUsers }) => {
               <td>{user.gender}</td>
               <td>{user.role}</td>
               <td>
-                <button className="btn btn-danger" onClick={() => deleteUser(user._id)}>Delete</button>
+                <button onClick={() => deleteUser(user._id)}>Delete</button>
+                <Link to={`/edituser/${user._id}`}><button>Edit</button></Link>
               </td>
             </tr>
           ))}

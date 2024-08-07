@@ -4,6 +4,7 @@ const cors = require('cors');
 const session = require('express-session');
 const db = require('./db');
 const userRoute = require('./controller/userController');
+const marksheetRoute = require('./controller/marksheetController')
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(session({
 }));
 
 app.use('/api/user', userRoute);
+app.use('/api/marksheet', marksheetRoute);
 
 const port = 5000;
 

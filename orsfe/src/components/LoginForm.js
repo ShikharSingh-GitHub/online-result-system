@@ -25,7 +25,7 @@ const LoginForm = ({ setAuth }) => {
       })
       .then((data) => {
         localStorage.setItem('user', JSON.stringify(data.user));
-        setAuth(true);
+        setAuth(data.user);
         navigate('/');
       })
       .catch((error) => {
