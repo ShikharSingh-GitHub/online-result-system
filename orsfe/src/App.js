@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
-import UserForm from './components/UserForm';
-import UserList from './components/UserList';
+import React, { useEffect, useState } from 'react';
+import { Link, Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import MarksheetForm from './components/MarksheetForm';
 import MarksheetList from './components/MarksheetList';
 import MeritMarksheetList from './components/MeritMarksheetList';
 import SignUp from './components/SignUp';
+import UserForm from './components/UserForm';
+import UserList from './components/UserList';
 
 const App = () => {
   const [user, setUser] = useState(null); // Store user details

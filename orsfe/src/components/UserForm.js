@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const UserForm = () => {
   const { id } = useParams();
@@ -45,6 +45,13 @@ const UserForm = () => {
   };
 
   const handleSubmit = () => {
+
+     // Convert loginId to lowercase before submitting
+     const updatedFormData = {
+      ...formData,
+      loginId: formData.loginId.toLowerCase()
+    };
+
     const url = id ? `http://localhost:5000/api/user/updateuser/${id}` : 'http://localhost:5000/api/user/adduser';
     const method = 'POST';
 
@@ -53,7 +60,7 @@ const UserForm = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(updatedFormData),
       credentials: 'include',
     })
       .then(response => {
@@ -112,7 +119,7 @@ const UserForm = () => {
                 </div>
                 <div className="form-group">
                   <label>Date of Birth</label>
-                  <input type="date" name="dob" value={new Date(formData.dob).toLocaleDateString()} onChange={handleChange} className="form-control"
+                  <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="form-control"
                   />
                 </div>
                 <div className="form-group">
@@ -128,8 +135,8 @@ const UserForm = () => {
                   <label>Role</label>
                   <select name="role" value={formData.role} onChange={handleChange} className="form-control" >
                     <option value="">Select Role</option>
-                    <option value="Admin">Admin</option>
-                    <option value="User">User</option>
+                    <option value="Admin">admin</option>
+                    <option value="User">student</option>
                   </select>
                 </div>
                 <div className="text-center">
